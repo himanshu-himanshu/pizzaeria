@@ -70,7 +70,13 @@ const RegisterPage = () => {
           or login with provider
         </div>
         <button className="flex gap-4 justify-center">
-          <Image src={"/google.png"} height={24} width={24} /> Login with google
+          <Image
+            src={"/google.png"}
+            height={24}
+            width={24}
+            alt="Google Image"
+          />{" "}
+          Login with google
         </button>
         <div className="text-center px-2 py-6 text-gray-600">
           Already a member?{" "}

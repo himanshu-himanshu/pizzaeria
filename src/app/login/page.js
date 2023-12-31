@@ -1,7 +1,8 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useState } from "react";
+import { signIn, signOut } from "next-auth/react";
 
 const page = () => {
   /**
@@ -10,7 +11,7 @@ const page = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loginInProgess, setLoginInProgess] = useState(false);
+  const [loginInProgress, setLoginInProgress] = useState(false);
   const [error, setError] = useState(false);
 
   /**
@@ -19,25 +20,9 @@ const page = () => {
 
   async function handleFormSubmit(e) {
     e.preventDefault();
-    loginInProgess(true);
-
-    /**
-     * SEND REQUEST TO /api/login ROUTE FOR LOGIN INTO THE APP
-     */
-
-    const response = await fetch("/api/login", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-      headers: { "Content-Type": "application/json" },
-    });
-
-    if (response.ok) {
-      setError(false);
-    } else {
-      console.log(response);
-      setError(true);
-    }
-    setLoginInProgess(false);
+    setLoginInProgress(true);
+    signIn("credentials", { email, password, callbackUrl: "/" });
+    setLoginInProgress(false);
   }
 
   return (
@@ -46,7 +31,7 @@ const page = () => {
       {error && (
         <div className="p-2 text-center text-gray-600">
           Something went wrong!
-          <br /> Now you can Pleae try again later.
+          <br /> Now you can Please try again later.
         </div>
       )}
       <form className="block max-w-sm mx-auto" onSubmit={handleFormSubmit}>
@@ -54,24 +39,32 @@ const page = () => {
           type="email"
           placeholder="email"
           value={email}
+          name="email"
           onChange={(e) => setEmail(e.target.value)}
-          disabled={loginInProgess}
+          disabled={loginInProgress}
         />
         <input
           type="password"
           placeholder="password"
           value={password}
+          name="password"
           onChange={(e) => setPassword(e.target.value)}
-          disabled={loginInProgess}
+          disabled={loginInProgress}
         />
-        <button type="submit" disabled={loginInProgess}>
+        <button type="submit" disabled={loginInProgress}>
           Login
         </button>
         <div className="my-4 text-center text-gray-500">
           or login with provider
         </div>
         <button className="flex gap-4 justify-center">
-          <Image src={"/google.png"} height={24} width={24} /> Login with google
+          <Image
+            src={"/google.png"}
+            height={24}
+            width={24}
+            alt="Google Image"
+          />{" "}
+          Login with google
         </button>
         <div className="text-center px-2 py-6 text-gray-600">
           Don't have an account?{" "}

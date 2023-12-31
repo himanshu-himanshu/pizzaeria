@@ -24,4 +24,4 @@ UserSchema.post("validate", function (user) {
   user.password = bcrypt.hashSync(pass, salt);
 });
 
-export const User = models?.user || model("User", UserSchema);
+export const User = models?.User || model("User", UserSchema);
