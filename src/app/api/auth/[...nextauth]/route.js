@@ -5,6 +5,12 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 
 const handler = NextAuth({
+  /**
+   * We can add different providers
+   * such as Google, Github or even simple credentials
+   * as used below.
+   */
+
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -16,9 +22,11 @@ const handler = NextAuth({
       async authorize(credentials, req) {
         const { email, password } = credentials;
 
+        // Database connection to find user using email
         mongoose.connect(process.env.MONGO_URL);
         const user = await User.findOne({ email });
 
+        // Check for password
         if (user && bcrypt.compareSync(password, user.password)) {
           return user;
         }
