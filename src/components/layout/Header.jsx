@@ -6,6 +6,9 @@ const Header = () => {
   const session = useSession();
   console.log(session);
   const status = session.status;
+  const userData = session.data?.user;
+  const userName = userData?.name || userData?.email;
+
   return (
     <header className="flex items-center justify-between">
       <nav className="flex items-center gap-8 text-gray-600 font-semibold">
@@ -19,12 +22,17 @@ const Header = () => {
       </nav>
       <nav className="flex items-center gap-4 text-gray-600 font-semibold">
         {status === "authenticated" && (
-          <button
-            onClick={() => signOut()}
-            className="bg-primary text-white px-7 py-2 rounded-full"
-          >
-            Logout
-          </button>
+          <>
+            <Link href={"/profile"} className="whitespace-nowrap">
+              Hello, {userName}
+            </Link>
+            <button
+              onClick={() => signOut()}
+              className="bg-primary text-white px-7 py-2 rounded-full"
+            >
+              Logout
+            </button>
+          </>
         )}
         {status === "unauthenticated" && (
           <>

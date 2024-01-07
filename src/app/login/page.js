@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { signIn, signOut } from "next-auth/react";
+import { signIn } from "next-auth/react";
 
 const page = () => {
   /**
@@ -21,7 +21,7 @@ const page = () => {
   async function handleFormSubmit(e) {
     e.preventDefault();
     setLoginInProgress(true);
-    signIn("credentials", { email, password, callbackUrl: "/" });
+    await signIn("credentials", { email, password, callbackUrl: "/" });
     setLoginInProgress(false);
   }
 

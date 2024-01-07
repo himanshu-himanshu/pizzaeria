@@ -3,14 +3,15 @@ import mongoose from "mongoose";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
+import { MongoDBAdapter } from "@auth/mongodb-adapter";
+import clientPromise from "../../../../libs/mongoConnect";
 
-const handler = NextAuth({
+export const authOptions = {
   /**
    * We can add different providers
    * such as Google, Github or even simple credentials
    * as used below.
    */
-
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -27,7 +28,10 @@ const handler = NextAuth({
         const user = await User.findOne({ email });
 
         // Check for password
-        if (user && bcrypt.compareSync(password, user.password)) {
+        const passwordOK = user && bcrypt.compareSync(password, user.password);
+
+        if (passwordOK) {
+          console.log("AUTH", user);
           return user;
         }
 
@@ -37,6 +41,8 @@ const handler = NextAuth({
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
