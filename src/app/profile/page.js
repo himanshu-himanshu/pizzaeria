@@ -27,7 +27,7 @@ const Profile = () => {
 
   const handleProfileInfoUpdate = async (ev) => {
     ev.preventDefault();
-    const response = await fetch("/api/profile", {
+    const response = await fetch("/api/upload", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: userName }),
@@ -38,6 +38,19 @@ const Profile = () => {
     if (response.ok) {
       console.log("INSIDE RES OK");
       setSaved(true);
+    }
+  };
+
+  const handleUserProfile = async (ev) => {
+    const files = ev.files;
+    if (files?.length > 0) {
+      const data = new FormData();
+      data.set("files", files);
+      await fetch("/api/upload", {
+        method: "POST",
+        body: data,
+        headers: { "Content-Type": "multipart/form-data" },
+      });
     }
   };
 
@@ -60,7 +73,11 @@ const Profile = () => {
               className="rounded-full"
             />
             <label>
-              <input type="file" className="hidden" />
+              <input
+                type="file"
+                className="hidden"
+                onChange={handleUserProfile}
+              />
               <span className="my-2 hover:cursor-pointer font-semibold border-0 outline-none flex gap-1 items-center justify-center">
                 Edit
               </span>
